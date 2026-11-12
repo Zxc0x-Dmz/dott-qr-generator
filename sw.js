@@ -1,5 +1,6 @@
-// Keeps the app working with no internet. Change VERSION when you update index.html.
-const VERSION = "dott-qr-1.59";
+// Keeps the app working with no internet. The HTML page is network-first, so when online
+// you always get the latest version; icons/manifest stay cache-first. Bump VERSION each release.
+const VERSION = "dott-qr-1.63";
 const FILES = ["./", "index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png"];
 
 self.addEventListener("install", event => {
@@ -13,6 +14,19 @@ self.addEventListener("activate", event => {
 });
 
 self.addEventListener("fetch", event => {
-  if (event.request.method !== "GET") return;
-  event.respondWith(caches.match(event.request).then(hit => hit || fetch(event.request)));
+  const req = event.request;
+  if (req.method !== "GET") return;
+  const isDoc = req.mode === "navigate" || req.destination === "document";
+  if (isDoc) {
+    // Network-first: fresh page when online, cached page when offline.
+    event.respondWith(
+      fetch(req).then(res => {
+        const copy = res.clone();
+        caches.open(VERSION).then(c => c.put("index.html", copy)).catch(() => {});
+        return res;
+      }).catch(() => caches.match("index.html").then(h => h || caches.match("./")))
+    );
+    return;
+  }
+  event.respondWith(caches.match(req).then(hit => hit || fetch(req)));
 });
