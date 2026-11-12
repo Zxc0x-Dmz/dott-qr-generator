@@ -1,6 +1,6 @@
 // Keeps the app working with no internet. The HTML page is network-first, so when online
 // you always get the latest version; icons/manifest stay cache-first. Bump VERSION each release.
-const VERSION = "dott-qr-1.67";
+const VERSION = "dott-qr-1.68";
 const FILES = ["./", "index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png"];
 
 self.addEventListener("install", event => {
