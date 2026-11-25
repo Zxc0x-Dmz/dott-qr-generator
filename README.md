@@ -19,4 +19,4 @@ For Dott internal operations only. Do not share these links outside the team.
 
 The camera needs the https link above; it does not work when `index.html` is opened as a file.
 
-Current version: website and iPhone **1.74** · Android APK **1.73**
+Current version: website and iPhone **1.75** · Android APK **1.74**
